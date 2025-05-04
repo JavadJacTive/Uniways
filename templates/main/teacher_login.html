@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>صفحه ورود استاد محترم</title>
+  <style>
+    /* تنظیمات کلی صفحه */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background-color: #47086b; /* رنگ پس‌زمینه اصلی */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      
+      height: 100vh; /* این تضمین می‌کنه که کل ارتفاع صفحه پوشش داده بشه */
+    }
+
+
+
+    /* کانتینر فرم */
+    .form-container {
+      background-color: #5A2E62; /* رنگ پس‌زمینه فرم (کمی روشن‌تر از پس‌زمینه صفحه) */
+      padding: 2rem;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      
+    }
+
+    /* عنوان بالای فرم */
+    .form-container h2 {
+      margin: 0 0 1rem;
+      text-align: center;
+      color: #fff;
+    }
+
+    /* برچسب‌های فیلد */
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    /* ورودی‌ها */
+    input[type="text"],
+    input[type="password"] {
+      width: 93%;
+      padding: 0.7rem;
+      margin-bottom: 1.2rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      
+    }
+
+    /* دکمه ارسال */
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #D81B60; /* رنگ دلخواه برای دکمه */
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #c2185b;
+    }
+
+    /* ریسپانسیو برای نمایشگرهای کوچک‌تر */
+    @media (max-width: 480px) {
+      .form-container {
+        padding: 1rem;
+        margin: 0 1rem;
+      }
+      label {
+        font-size: 0.9rem;
+      }
+      input[type="text"],
+      input[type="password"] {
+        font-size: 0.85rem;
+      }
+      button {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+
+  <div class="form-container">
+    <h2>استاد محترم (ورود)</h2>
+    <form method="post" action="{% url 'teacher_login_view_name' %}">
+      {% csrf_token %}
+      <label for="mobile">شماره موبایل</label>
+      <input type="text" id="mobile" name="number" placeholder="شماره موبایل خود را وارد کنید" />
+
+      <label for="password">رمز عبور</label>
+      <input type="password" id="password" name="password" placeholder="رمز عبور خود را وارد کنید" />
+
+      {% if form.non_field_errors %}
+        <p style="color: red;">{{ form.non_field_errors.0 }}</p>
+      {% endif %}
+
+      
+      <button type="submit" >ورود</button>
+      
+      
+     
+     
+
+    </form>
+
+    
+  </div>
+
+
+
+
+
+  <script>
+    
+</script>
+</body>
+</html>

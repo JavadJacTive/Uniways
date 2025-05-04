@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>Wipe Transition</title>
+    <style>
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .wipe {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #3498db; /* رنگ انیمیشن */
+            transform: translateX(-100%); /* شروع از چپ خارج صفحه */
+            animation: none; /* پیش‌فرض بدون انیمیشن */
+        }
+
+        .wipe.active {
+            animation: wipeInOut 2s ease-in-out forwards; /* انیمیشن ورود و خروج */
+        }
+
+        @keyframes wipeInOut {
+            0% { transform: translateX(-100%); } /* شروع از چپ */
+            50% { transform: translateX(0); }    /* وسط صفحه */
+            100% { transform: translateX(100%); } /* خروج از راست */
+        }
+
+        button {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wipe" id="wipeEffect"></div>
+        <form id="myForm">
+            <button type="submit">ارسال</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('myForm');
+        const wipe = document.getElementById('wipeEffect');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // جلوگیری از رفرش صفحه
+            wipe.classList.add('active'); // شروع انیمیشن
+
+            // بعد از اتمام انیمیشن (2 ثانیه) می‌تونی صفحه بعدی رو لود کنی
+            setTimeout(() => {
+                wipe.classList.remove('active');
+                // اینجا می‌تونی کد لود صفحه بعدی رو بذاری
+                console.log("فرم ارسال شد، صفحه بعدی لود می‌شه!");
+            }, 2000); // زمان انیمیشن
+        });
+    </script>
+</body>
+</html>

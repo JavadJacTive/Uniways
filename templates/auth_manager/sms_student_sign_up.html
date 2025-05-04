@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فرم ورود با رمز یکبار مصرف</title>
+    <style>
+        body {
+            background-color: #4b1e3f;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            background: #622a51;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h2 {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            margin-bottom: 1.5rem;
+        }
+        .otp-input-container {
+            display: flex;
+            justify-content: center;
+            gap: clamp(5px, 2vw, 10px);
+            flex-wrap: wrap;
+        }
+        .otp-input {
+            width: clamp(40px, 12vw, 50px);
+            height: clamp(40px, 12vw, 50px);
+            text-align: center;
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #e0b3ff;
+            color: #8200aa;
+            box-sizing: border-box;
+        }
+        .otp-input:focus {
+            outline: 2px solid #a84e7f;
+        }
+        .btn {
+            margin-top: 1rem;
+            padding: clamp(8px, 2vw, 10px);
+            background-color: #8c3a67;
+            border: none;
+            color: white;
+            font-size: clamp(1em, 3vw, 1.2em);
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover:not(:disabled) {
+            background-color: #a84e7f;
+        }
+        .btn:disabled {
+            background-color: #6b5a66;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>دانشجوی گل (ثبت نام)</h2>
+        <button class="btn" id="send-sms-btn" type="button">ارسال اس‌ام‌اس</button>
+        <form id="otp-form" action="{% url 'student_sms_signUp_verified_Name' %}" method="POST">
+            {% csrf_token %}
+            <div class="otp-input-container">
+                <input name="number1_student" type="text" class="otp-input" maxlength="1" name="otp1" oninput="moveToNext(this, 0)">
+                <input name="number2_student" type="text" class="otp-input" maxlength="1" name="otp2" oninput="moveToNext(this, 1)">
+                <input name="number3_student" type="text" class="otp-input" maxlength="1" name="otp3" oninput="moveToNext(this, 2)">
+                <input name="number4_student" type="text" class="otp-input" maxlength="1" name="otp4" oninput="moveToNext(this, 3)">
+            </div>
+            {% if error_message %}
+                <p style="color: red; text-align: center;">{{ error_message }}</p>
+            {% endif %}
+            <button type="submit" class="btn" id="submit-btn">تایید</button>
+        </form>
+    </div>
+    <script>
+        const sendSmsBtn = document.getElementById('send-sms-btn');
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const otpForm = document.getElementById('otp-form');
+    
+        // تابع جابجایی بین ورودی‌ها
+        function moveToNext(element, index) {
+            let inputs = Array.from(otpInputs);
+            if (element.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+            checkInputs();
+        }
+    
+        // بررسی پر شدن فیلدها
+        function checkInputs() {
+            let filled = Array.from(otpInputs).every(input => input.value.length === 1);
+            if (filled) {
+                otpForm.submit(); // ارسال فرم به جنگو
+            }
+        }
+    
+        // تابع غیرفعال کردن دکمه ارسال اس‌ام‌اس با تایمر
+        function disableSendButton() {
+            let timeLeft = 60; // 60 ثانیه
+            sendSmsBtn.disabled = true;
+            sendSmsBtn.textContent = `ارسال مجدد (${timeLeft} ثانیه)`;
+    
+            const countdown = setInterval(() => {
+                timeLeft--;
+                sendSmsBtn.textContent = `ارسال مجدد (${timeLeft} ثانیه)`;
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    sendSmsBtn.disabled = false;
+                    sendSmsBtn.textContent = "ارسال اس‌ام‌اس";
+                }
+            }, 1000);
+        }
+    
+        // رویداد برای دکمه ارسال اس‌ام‌اس
+        sendSmsBtn.addEventListener('click', () => {
+            disableSendButton(); // تایمر بلافاصله فعال می‌شه
+            otpInputs[0].focus(); // فوکوس روی اولین ورودی
+    
+            fetch("{% url 'send_sms_sign_up_name' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ action: 'send_sms' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('اس‌ام‌اس با موفقیت ارسال شد!');
+                } else {
+                    console.log('خطا در ارسال اس‌ام‌اس: ' + (data.message || 'دوباره امتحان کنید'));
+                }
+            })
+            .catch(error => {
+                console.error('خطا:', error);
+            });
+        });
+    
+        // بررسی ورودی‌ها هنگام تایپ
+        otpInputs.forEach(input => {
+            input.addEventListener('input', checkInputs);
+        });
+    </script>
+</body>
+</html>

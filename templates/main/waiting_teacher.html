@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>در حال انتظار...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazir', Arial, sans-serif;
+            background: #2c1b47;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #fff;
+            position: relative;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .container {
+            text-align: center;
+            padding: 30px;
+            max-width: 700px;
+            width: 90%;
+            background: linear-gradient(145deg, rgba(44, 27, 71, 0.4), rgba(75, 46, 107, 0.2));
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #e1bee7;
+            text-shadow: 0 0 12px rgba(225, 190, 231, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .dots {
+            font-size: 1.6rem;
+            color: #e1bee7;
+            animation: dots 1.8s infinite;
+            display: inline-block;
+        }
+
+        .loader {
+            margin: 40px auto;
+            width: 150px;
+            height: 6px;
+            background: rgba(225, 190, 231, 0.15);
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #e1bee7, transparent);
+            border-radius: 3px;
+            position: absolute;
+            left: -100%;
+            animation: glide 5s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(225, 190, 231, 0.7);
+        }
+
+        p {
+            font-size: 1.3rem;
+            color: #d1c4e9;
+            margin-top: 25px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        @keyframes glide {
+            0% {
+                transform: translateX(0);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateX(250px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(500px);
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes dots {
+            0%, 20% {
+                content: '.';
+            }
+            40% {
+                content: '..';
+            }
+            60% {
+                content: '...';
+            }
+            100% {
+                content: '';
+            }
+        }
+
+        /* ریسپانسیو کردن */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                width: 85%;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .loader {
+                width: 120px;
+                height: 5px;
+                margin: 30px auto;
+            }
+
+            .progress {
+                animation: glide 4.5s ease-in-out infinite;
+            }
+
+            p {
+                font-size: 1.1rem;
+            }
+
+            .dots {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                width: 90%;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .loader {
+                width: 100px;
+                height: 4px;
+                margin: 25px auto;
+            }
+            .progress {
+                animation: glide 4s ease-in-out infinite;
+            }
+
+            p {
+                font-size: 0.95rem;
+            }
+
+            .dots {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    <div class="container">
+        <h1>در حال انتظار</h1>
+        <span class="dots">...</span>
+        <div class="loader">
+            <div class="progress"></div>
+        </div>
+        <p>لطفاً کمی صبر کنید، در حال بررسی و آماده‌سازی حساب شما هستیم!</p>
+    </div>
+
+    <!-- اضافه کردن فونت Vazir -->
+    <link href="https://v1.fontapi.ir/css/Vazir" rel="stylesheet">
+
+    <!-- اسکریپت برای ذرات متحرک -->
+    <script>
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+
+        // تنظیم اندازه canvas
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // تعریف ذرات
+        const particlesArray = [];
+        const numberOfParticles = 50; // کمی بیشتر برای پراکندگی بهتر
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 1; // ریزتر برای ظرافت
+                this.speedX = Math.random() * 0.1 - 0.05; // حرکت نرم‌تر
+                this.speedY = Math.random() * 0.1 - 0.05;
+                this.opacity = Math.random() * 0.3 + 0.1;
+                this.glow = Math.random() * 0.015 + 0.005;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // برگشتن به صفحه
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+
+                // افکت درخشش نرم
+                this.opacity += Math.sin(Date.now() * this.glow) * 0.015;
+                if (this.opacity < 0.1) this.opacity = 0.1;
+                if (this.opacity > 0.4) this.opacity = 0.4;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = rgba(225, 190, 231, ${this.opacity});
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = rgba(225, 190, 231, ${this.opacity});
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // مقداردهی اولیه ذرات
+        for (let i = 0; i < numberOfParticles; i++) {
+            particlesArray.push(new Particle());
+        }
+
+        // انیمیشن
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // تنظیم مجدد اندازه canvas در تغییر اندازه پنجره
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particlesArray.forEach(particle => {
+                particle.x = Math.random() * canvas.width;
+                particle.y = Math.random() * canvas.height;
+            });
+        });
+    </script>
+</body>
+</html>

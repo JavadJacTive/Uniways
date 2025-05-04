@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پروفایل کاربر</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4b0082, #800080);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            margin-top: 15px;
+        }
+        .button-container form {
+            display: inline;
+        }
+        .button-container button {
+            padding: 10px 20px;
+            background-color: #e0b3ff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            color: #4b0082;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .button-container button:hover {
+            background-color: #c08be8;
+        }
+        .search-box {
+            margin-bottom: 15px;
+            width: 80%;
+            max-width: 400px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1em;
+        }
+        .profile-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 80%;
+            max-width: 1920px;
+            min-width: 150px;
+        }
+        h1 {
+            font-size: 1.8em;
+        }
+        strong {
+            font-size: 1.2em;
+        }
+        @media (max-width: 768px) {
+            .profile-container {
+                width: 90%;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            strong {
+                font-size: 1em;
+            }
+        }
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 100%;
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.2em;
+            }
+            strong {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-container">
+            <h1>  {{teacher.first_name}} {{teacher.last_name}} </h1>
+            <strong> {{teacher.number}} </strong>
+        </div>
+        <div class="button-container">
+            <form action="{% url 'upload_post_Page_name' teacher.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">آپلود پست</button>
+            </form>
+            <form  method="post">
+                {% csrf_token %}
+                <button type="submit">ویرایش پروفایل</button>
+            </form>
+        </div>
+        <div class="search-box">
+            <input type="text" placeholder="جستجو...">
+        </div>
+    </div>
+</body>
+</html>

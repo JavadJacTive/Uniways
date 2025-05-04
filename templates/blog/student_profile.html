@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پروفایل کاربر</title>
+    <style>
+        @font-face {
+            font-family: 'Vazir';
+            src: url("{% static 'fonts/Vazir-Regular.woff2' %}") format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Vazir';
+            src: url("{% static 'fonts/Vazir-Bold.woff2' %}") format('woff2');
+            font-weight: bold;
+            font-style: normal;
+        }
+        * {
+            font-family: 'Vazir', sans-serif !important;
+        }
+        body {
+            background: linear-gradient(135deg, #2c003e, #4b0082, #3f0066, #2c003e);
+            background-size: 300% 300%;
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            animation: gradientMove 12s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+        .profile-container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            margin: 20px auto;
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+        .logout-btn, .back-btn {
+            background: linear-gradient(45deg, #ff4b5c, #ff8c94);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        .back-btn {
+            background: linear-gradient(45deg, #4b0082, #6a00b3);
+        }
+        .logout-btn:hover, .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .faculty-info {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: right;
+        }
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff8c94, #ff4b5c);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin: 0;
+        }
+        h2 {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin: 5px 0;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .search-box {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            outline: none;
+            transition: background 0.3s;
+            text-align: right;
+            direction: rtl;
+        }
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: right;
+        }
+        .search-box:focus {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .student-info {
+            margin-top: 20px;
+        }
+        p {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin: 5px 0;
+        }
+        @media (max-width: 400px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+            }
+            .faculty-info {
+                text-align: center;
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .profile-pic {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            .search-box {
+                width: 100%;
+                max-width: none;
+            }
+            .button-container {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .logout-btn, .back-btn {
+                width: auto;
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="header">
+            <div class="button-container">
+
+                <form method="post" action="{% url 'logout_student_name' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">خروج</button>
+                </form>
+                <button class="back-btn">پروفایل</button>
+            </div>
+            <div class="faculty-info">
+                
+                <div>
+                    <h2> {{ student.name }}</h2>
+                    <p> {{ student.department }} </p>
+                </div>
+            </div>
+        </div>
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="جستجوی کلاس یا استاد">
+        </div>
+        <div class="student-info">
+            <!-- اطلاعات اضافی اگه بخوای -->
+        </div>
+    </div>
+</body>
+</html>
