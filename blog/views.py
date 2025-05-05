@@ -63,8 +63,9 @@ def upload_post(request, teacher_id):
 
             department_model = get_object_or_404(Department, name=teacher.department)
             aPost.department = department_model
-
-            study_model = get_object_or_404()
+            
+            study_model = get_object_or_404(StudyField, name=teacher.field_of_study)
+            aPost.study_field = study_model
 
             aPost.save()
             return HttpResponse('<h1 style="color:green"> Completed </h1>')

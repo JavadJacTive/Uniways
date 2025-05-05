@@ -94,7 +94,7 @@ def teacher_sing_up_view(request):
                 last_name=form.cleaned_data['last_name'],
                 number=form.cleaned_data['number'],
                 department=form.cleaned_data['department'],
-                field_of_study= "SS",
+                field_of_study= form.cleaned_data['field_of_study'],
                 password=form.cleaned_data['password'],
                 verification_teacher='False'
                 )
