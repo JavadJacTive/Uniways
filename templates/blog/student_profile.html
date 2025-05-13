@@ -1,3 +1,4 @@
+Javad, [5/5/2025 8:14 PM]
 {% load static %}
 <!DOCTYPE html>
 <html lang="fa">
@@ -5,19 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پروفایل کاربر</title>
+    <!-- فونت Vazir از CDN -->
+    <link href="https://cdn.fontlibrary.ir/vazir/vazir.css" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'Vazir';
-            src: url("{% static 'fonts/Vazir-Regular.woff2' %}") format('woff2');
-            font-weight: normal;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'Vazir';
-            src: url("{% static 'fonts/Vazir-Bold.woff2' %}") format('woff2');
-            font-weight: bold;
-            font-style: normal;
-        }
         * {
             font-family: 'Vazir', sans-serif !important;
         }
@@ -27,17 +18,19 @@
             color: white;
             margin: 0;
             min-height: 100vh;
-            display: flex;
+            display: block;
             justify-content: center;
             align-items: flex-start;
             animation: gradientMove 12s ease infinite;
+            position: relative;
+            overflow: hidden;
         }
         @keyframes gradientMove {
             0% { background-position: 0% 0%; }
             50% { background-position: 100% 100%; }
             100% { background-position: 0% 0%; }
         }
-        .profile-container {
+        .profile-container, .blog {
             width: 90%;
             max-width: 800px;
             background: rgba(255, 255, 255, 0.1);
@@ -47,6 +40,7 @@
             text-align: center;
             margin: 20px auto;
             box-sizing: border-box;
+            display: block;
         }
         .header {
             display: flex;
@@ -92,6 +86,7 @@
             align-items: center;
             gap: 15px;
             text-align: right;
+            direction: rtl;
         }
         .profile-pic {
             width: 50px;
@@ -103,10 +98,6 @@
             align-items: center;
             font-size: 24px;
             font-weight: bold;
-        }
-        h1 {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            margin: 0;
         }
         h2 {
             font-size: clamp(1.2rem, 3vw, 1.8rem);
@@ -130,7 +121,9 @@
             transition: background 0.3s;
             text-align: right;
             direction: rtl;
-        }
+
+
+}
         .search-box::placeholder {
             color: rgba(255, 255, 255, 0.7);
             text-align: right;
@@ -144,6 +137,15 @@
         p {
             font-size: clamp(1rem, 2.5vw, 1.2rem);
             margin: 5px 0;
+            
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
         @media (max-width: 400px) {
             .header {
@@ -178,10 +180,10 @@
     </style>
 </head>
 <body>
+    <canvas id="particles"></canvas>
     <div class="profile-container">
         <div class="header">
             <div class="button-container">
-
                 <form method="post" action="{% url 'logout_student_name' %}">
                     {% csrf_token %}
                     <button type="submit" class="logout-btn">خروج</button>
@@ -189,10 +191,9 @@
                 <button class="back-btn">پروفایل</button>
             </div>
             <div class="faculty-info">
-                
                 <div>
-                    <h2> {{ student.name }}</h2>
-                    <p> {{ student.department }} </p>
+                    <h2>{{ student.name }}</h2>
+                    <p>{{ student.department }}</p>
                 </div>
             </div>
         </div>
@@ -203,5 +204,103 @@
             <!-- اطلاعات اضافی اگه بخوای -->
         </div>
     </div>
+   
+   
+    <div class="blog">
+        <div class="header">
+            
+            <div class="faculty-info">
+                <div>
+                    <h2>{{ posts.lesson_name }}</h2>
+                    <p>{{ posts.teacher }}</p>
+                    <p> {{ posts.title }} </p>
+                    <p> {{ posts.class_date }} </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="student-info">
+            <!-- اطلاعات اضافی اگه بخوای -->
+             
+        </div>
+    </div>
+
+    <!-- جاوااسکریپت برای پارتیکل‌های معلق -->
+    <script>
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const numParticles = 50;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+
+
+    this.color = ['#ff8c94', '#6a00b3', '#ffffff', '#ff4b5c'][Math.floor(Math.random() * 4)];
+                    this.opacity = Math.random() * 0.4 + 0.3;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                this.opacity = 0.3 + Math.sin(Date.now() * 0.001) * 0.2;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.fill();
+            }
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 80) {
+                        ctx.strokeStyle = `rgba(255, 140, 148, ${1 - distance / 80})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            connectParticles();
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
 </body>
 </html>

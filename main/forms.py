@@ -139,9 +139,33 @@ class TeacherForm(forms.ModelForm):
          # بررسی شماره در مدل Teacher (برای جلوگیری از ارور پیش‌فرض unique)
         if Teacher.objects.filter(number=number).exists():
             raise forms.ValidationError("Teacher with this Number already exists.")
-
+        
         return number
     
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name', '').strip()
+
+        if len(str(first_name)) > 10:
+            raise forms.ValidationError("طول کاراکتر های نام شما زیاد است حداکثر: 10 کاراکتر")
+
+        return first_name
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name', '').strip()
+
+        if len(str(last_name)) > 10:
+            raise forms.ValidationError("طول کاراکتر های نام‌خانوادگی شما زیاد است حداکثر: 10 کاراکتر")
+        
+        return last_name
+    
+    def clean_password(self):
+        password = self.cleaned_data.get('password', '').strip()
+
+        if len(str(password)) > 120:
+            raise forms.ValidationError("طول کاراکتر های رمز شما زیاد است حداکثر: 120 کاراکتر")
+
+        return password
+
 class TeacherForm_login(forms.Form):
     
    

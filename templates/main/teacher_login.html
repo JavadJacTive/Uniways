@@ -104,6 +104,8 @@
     <h2>استاد محترم (ورود)</h2>
     <form method="post" action="{% url 'teacher_login_view_name' %}">
       {% csrf_token %}
+      <h1> {{ form.errors }} </h1>
+
       <label for="mobile">شماره موبایل</label>
       <input type="text" id="mobile" name="number" placeholder="شماره موبایل خود را وارد کنید" />
 

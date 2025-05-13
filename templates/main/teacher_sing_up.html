@@ -91,33 +91,41 @@
             <form method="post" accept="{% url 'teacher_sms_signUp_Name' %}">
                 {% csrf_token %}
                 
+
+                {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                            <p style="text-align: right; color: #ff0000;">{{ error|safe }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <p style="text-align: right; color: #ff0000;">{{ error|safe }}</p>
+                {% endfor %}
+        {% endif %}
+
+
                 <div class="mb-3">
                     <label for="name" class="form-label">نام</label>
                     <input   type="text" id="name" name="first_name" class="form-control" required>
-                    <!-- اگر ارور داشتیم   -->  
-                {% if form.first_name.errors %}
-                {% for error in form.first_name.errors %}
-
-                <!-- بررسی ارور خود جنگو-->
-                {% if "This field is required" in error %}
-                <div style="text-align: center; color: #ff0000;" > نام را وارد کنید *</div>
-                {% endif %}
-                {% endfor %}
-                {% endif %}
-                </div>
+                    {% if form.first_name.errors %}
+                        {% for error in form.first_name.errors %}
+                            <div style="text-align: center; color: #ff0000;" > {{error}}</div>
+                        {% endfor %}
+                    {% endif %}
+               
 
                 <div class="mb-3">
                     <label for="name" class="form-label">نام خانوادگی *</label>
                     <input type="text" id="name" name="last_name" class="form-control" required>
-                    {% if form.first_name.errors %}
-                 {% for error in form.last_name.errors %}
+                    {% if form.last_name.errors %}
+                        {% for error in form.last_name.errors %}
+                            <div style="text-align: center; color: #ff0000;"> {{ error }} </div>
+                        {% endfor %}
+                    {% endif %}
+                 
 
-                <!-- بررسی ارور خود جنگو-->
-                {% if "This field is required" in error %}
-                <div style="text-align: center; color: #ff0000;" > نام خانوادگی را وارد کنید </div>
-                {% endif %}
-                {% endfor %}
-                {% endif %}
+           
+              
                 </div>
             
                 <div class="mb-3">
@@ -151,7 +159,7 @@
                     <select id="department" name="department" class="form-select">
                         <option value="">🔽 لطفاً یک دانشکده انتخاب کنید</option>
                         {% for department in departments %}
-                        <option value="{{ department.name }}" > {{department.name}} </option>
+                        <option value="{{ department.id }}" > {{department.name}} </option>
                         {% endfor %}
                     </select>
                     {% if form.department.errors %}
@@ -179,14 +187,11 @@
                     <label for="password" class="form-label">رمز عبور</label>
                     <input type="password" id="password" name="password" class="form-control" required>
                     {% if form.password.errors %}
-                {% for error in form.password.errors %}
-
-                <!-- بررسی ارور خود جنگو-->
-                {% if "This field is required" in error %}
-                <div style="text-align: center; color: #ff0000;" > فیلد رمز عبور خالیه </div>
-                {% endif %}
-                {% endfor %}
-                {% endif %}
+                        {% for error in form.password.errors %}
+                            <div style="text-align: center; color: #ff0000;" > {{ error }} </div>
+            
+                        {% endfor %}
+                    {% endif %}
                 </div>
             
                 <button type="submit" class="btn btn-primary w-100">ثبت نام</button>

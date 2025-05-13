@@ -115,6 +115,10 @@
                 {% csrf_token %}
                 <button type="submit">ویرایش پروفایل</button>
             </form>
+            <form  method="post" action="{% url 'logout_teacher_name' %}">
+                {% csrf_token %}
+                <button type="submit">خروج</button>
+            </form>
         </div>
         <div class="search-box">
             <input type="text" placeholder="جستجو...">

@@ -12,7 +12,7 @@ from jalali_date.fields import JalaliDateField
 class PostForm_teacher(forms.ModelForm):
 
     lesson_type = forms.ChoiceField(
-        choices=[('both', 'عمومی و تخصصی') ,('general' ,'عمومی'),  ('special', 'تخصصی')]
+        choices=[('', 'انتخاب نوع درس') ,('general' ,'عمومی'),  ('special', 'تخصصی')]
     )
 
     teacher_delay = forms.ChoiceField(

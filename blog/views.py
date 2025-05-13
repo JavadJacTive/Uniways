@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.shortcuts import redirect
 
+
 # Create your views here.
 
 # بغذ از لاگین کردن پروفایل در این ویو نمایش داده میشود
@@ -28,6 +29,7 @@ def teacher_profile_view(request, teacher_id):
 def student_profile_view(request, student_id):
 
     student = get_object_or_404(Student, pk=student_id)
+    posts = Post_Teacher.objects.filter(department=student.department) # از فیلتر استفاده کردیم تا هم فیلتر بکنه هم اگه پستی نبود کاربر هدایت نشه به صفخه چهار صذو چهار
    
     print("-------------------Information---------------------")
     print(f"Student User ID: {student.user.id}")
@@ -36,7 +38,11 @@ def student_profile_view(request, student_id):
     if student.user.id != request.user.id:
         return HttpResponseForbidden(" Noooooo")
 
-    return render(request, 'blog/student_profile.html', {'student':student})
+    # اگر پستی برای دانشجو موجود نبود فقط صفحه پروفایلش لود بشه
+    if not posts:
+        return render (request, 'blog/student_profile.html', {'student': student, 'posts':'هنوز اساتید موقعیت کلاس هارو اعلام نکردند'})
+
+    return render(request, 'blog/student_profile.html', {'student': student, 'posts': posts})
 
 
 # این ویو فقط مربوط به دکمه آپلود پست هست و کاربر رو به اون یو ار ال منتقل میکنه

@@ -245,6 +245,9 @@
     <div class="login-container">
         <h3 class="text-center">دانشجوی گل (ثبت‌نام)</h3>
 
+            
+
+
         {% if form.password.errors %}
             {% for error in form.password.errors %}
                 {% if "This field is required" in error %}
@@ -255,6 +258,7 @@
 
         <form method="POST">
             {% csrf_token %}
+            
             <div class="mb-3">
                 <label for="name" class="form-label">نام</label>
                 {% if form.name.errors %}

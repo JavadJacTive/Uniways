@@ -73,7 +73,7 @@ def teacher_sing_up_view(request):
         
         # گرفتن فرم از اسکریپت فرم
         form = TeacherForm(request.POST)
-
+       
         # اگر فرم ارور نداشت سیو کن
         if form.is_valid():
             departments = Department.objects.all()
@@ -85,8 +85,8 @@ def teacher_sing_up_view(request):
             #     username=form.cleaned_data["number"],
             #     password=form.cleaned_data["password"]
             # )
-            print(" T E A C H E R - F O R M")
-            print(f"F O R M : {form.cleaned_data['first_name']}")
+            print(" T E A C H E R - F O R M-----------------------------------------------------------")
+            print(f"D E P A R T M E N T : {form.cleaned_data['department']}")
 
             # Save Data in Database
             teacher = Teacher(
@@ -103,12 +103,7 @@ def teacher_sing_up_view(request):
             # save teacher.id to use auth_manager App (views.py)
             request.session['teacher_id'] = teacher.id
 
-            # Save Data in Session
-            request.session['first_name_teacher'] = form.cleaned_data['first_name']
-            request.session['last_name_teacher'] = form.cleaned_data['last_name']
-            request.session['number_teacher_'] = form.cleaned_data['number']
-            request.session['department_teacher'] = form.cleaned_data['department']
-            request.session['password_teacher'] = form.cleaned_data['password']
+      
 
 
 
