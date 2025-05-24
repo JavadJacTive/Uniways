@@ -18,6 +18,8 @@ urlpatterns = [
     path('admin_dashboard/', pending_teacher_view, name='pending_teacher_name'),
     path('approve_teacher/<int:teacher_id>/', approve_teacher, name='approve_teacher_name'),
 
+    
+
     # Logout Student
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout_student_name'),
     

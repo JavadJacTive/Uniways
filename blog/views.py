@@ -90,3 +90,11 @@ def upload_post(request, teacher_id):
 
     return render(request, 'blog/upload_post.html', {'form':form, 'current_time':current_time})
 
+
+
+
+@login_required
+def go_to_profile_page(request, teacher_id):
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    return render(request, 'blog/teacher_edit_profile.html', {'teacher':teacher})
