@@ -29,18 +29,21 @@ def teacher_profile_view(request, teacher_id):
 def student_profile_view(request, student_id):
 
     student = get_object_or_404(Student, pk=student_id)
-    posts = Post_Teacher.objects.filter(department=student.department) # از فیلتر استفاده کردیم تا هم فیلتر بکنه هم اگه پستی نبود کاربر هدایت نشه به صفخه چهار صذو چهار
+     # از فیلتر استفاده کردیم تا هم فیلتر بکنه هم اگه پستی نبود کاربر هدایت نشه به صفخه چهار صذو چهار
    
     print("-------------------Information---------------------")
-    print(f"Student User ID: {student.user.id}")
-    print(f"Request User ID: {request.user.id}")
+    posts = Post_Teacher.objects.filter(department_id=student.department.id)
+        
+
+    print(f"Post_Teacher.department: {Post_Teacher.department_id}")
+    print(f"student.department: {student.department.id}")
     
     if student.user.id != request.user.id:
         return HttpResponseForbidden(" Noooooo")
 
     # اگر پستی برای دانشجو موجود نبود فقط صفحه پروفایلش لود بشه
-    if not posts:
-        return render (request, 'blog/student_profile.html', {'student': student, 'posts':'هنوز اساتید موقعیت کلاس هارو اعلام نکردند'})
+    # if not posts:
+    #     return render (request, 'blog/student_profile.html', {'student': student, 'posts':'هنوز اساتید موقعیت کلاس هارو اعلام نکردند'})
 
     return render(request, 'blog/student_profile.html', {'student': student, 'posts': posts})
 

@@ -32,7 +32,7 @@ class PostForm_teacher(forms.ModelForm):
     class Meta:
         model = Post_Teacher    
         fields = ['title', 'lesson_name', 'class_date', 
-                   'class_time', 'description', 'lesson_type', 'teacher_delay']
+                   'class_time', 'description', 'lesson_type', 'education_level', 'teacher_delay']
 
     def __init__(self, *args, **kwargs):
         super(PostForm_teacher,self).__init__(*args, **kwargs)
@@ -41,6 +41,7 @@ class PostForm_teacher(forms.ModelForm):
         self.fields["class_time"].widget.attrs.update({'class':'form-control'})
         self.fields['title'].widget.attrs.update({'class': 'form-control'})
         self.fields['lesson_type'].widget.attrs.update({'class': 'select-dropdown'})
+        self.fields['education_level'].widget.attrs.update({'class': 'select-dropdown'})
         self.fields['lesson_name'].widget.attrs.update({'class': 'form-control'})
         self.fields['teacher_delay'].widget.attrs.update({'class': 'select-dropdown'})
         

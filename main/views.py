@@ -5,7 +5,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 from django.shortcuts import render, redirect
 from main.forms import StudentForm, TeacherForm, TeacherForm_login, StudentForm_login
-from main.models import Department, Teacher, Student, StudyField
+from main.models import Department, Teacher, Student, StudyField, EducationLevel
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -68,6 +68,7 @@ def teacher_sing_up_view(request):
     # وقتی درخواست گت رو زد و اومد تو صفحه بیاد از دیتابیس لود بشه
     departments = Department.objects.all()
     studyfields = StudyField.objects.all()
+    education_levels = EducationLevel.objects.all()
 
     if request.method == 'POST':
         
@@ -78,33 +79,44 @@ def teacher_sing_up_view(request):
         if form.is_valid():
             departments = Department.objects.all()
             studyfields = StudyField.objects.all()
+            education_levels = EducationLevel.objects.all()
+            
             
 
-            # ساخت یوزر جدید
-            # user = User.objects.create_user(
-            #     username=form.cleaned_data["number"],
-            #     password=form.cleaned_data["password"]
-            # )
-            print(" T E A C H E R - F O R M-----------------------------------------------------------")
-            print(f"D E P A R T M E N T : {form.cleaned_data['department']}")
+             # check exist teacher
+            teacher_exists = Teacher.objects.filter(number=request.POST.get('number'), verification_phonenumber='False').exists()
+            
+            # اگر استاد اجراز هویت نشده ای پیدا نشد بیاد یدونه بسازه
+            if teacher_exists == False:
 
-            # Save Data in Database
-            teacher = Teacher(
-                first_name=form.cleaned_data['first_name'],
-                last_name=form.cleaned_data['last_name'],
-                number=form.cleaned_data['number'],
-                department=form.cleaned_data['department'],
-                field_of_study= form.cleaned_data['field_of_study'],
-                password=form.cleaned_data['password'],
-                verification_teacher='False'
-                )
-            teacher.save()
+                teacher = form.save(commit=False)
+                teacher.save()
+          
+                # save teacher.id to use auth_manager App (views.py)
+                request.session['teacher_id'] = teacher.id
 
-            # save teacher.id to use auth_manager App (views.py)
-            request.session['teacher_id'] = teacher.id
+                return redirect("teacher_sms_signUp_Name")
+
+            if teacher_exists == True:
+                # Save Data in Database
+                teacher = Teacher.objects.filter(
+                    number=form.cleaned_data['number'],
+                    verification_phonenumber='False'
+                ).first()
+                
+                teacher.first_name = form.cleaned_data['first_name']
+                teacher.last_name = form.cleaned_data['last_name']
+                teacher.number = form.cleaned_data['number']
+                teacher.department = form.cleaned_data['department']
+                teacher.field_of_study = form.cleaned_data['field_of_study']
+                teacher.education_level = form.cleaned_data['education_level']
+                teacher.password = form.cleaned_data['password']
+                teacher.verification_teacher = 'False'
+                teacher.save()
+                request.session['teacher_id'] = teacher.id
+                return redirect("teacher_sms_signUp_Name")
 
       
-
 
 
             # متصل کردن استاد به یوزر استاد 
@@ -113,14 +125,22 @@ def teacher_sing_up_view(request):
             # teacher.save()
 
             
-            return redirect("teacher_sms_signUp_Name")
+            
         else:
             print(form.errors)
-            return render(request, 'main/teacher_sing_up.html', {'form': form, 'departments':departments, 'studyfields':studyfields})
+            return render(request, 'main/teacher_sing_up.html', {'form': form, 
+                                                                'departments':departments, 
+                                                                'studyfields':studyfields,
+                                                                'education_level':education_levels
+                                                                })
     # اگر گت بود
     else:
         form = TeacherForm()
-        return render(request, 'main/teacher_sing_up.html', {'form': form, 'departments':departments, 'studyfields':studyfields})
+        return render(request, 'main/teacher_sing_up.html', {'form': form,
+                                                             'departments':departments,
+                                                             'studyfields':studyfields,
+                                                             'education_level':education_levels
+                                                             })
 
 
 def teacher_login_view(request):
@@ -164,12 +184,14 @@ def student_sing_up_view(request):
     # وقتی درخواست گت رو زد و اومد تو صفحه بیاد از دیتابیس لود بشه
     department = Department.objects.all()
     studyField = StudyField.objects.all()
+    education_level = EducationLevel.objects.all()
 
     # درخواست پست (برای قرم ثبت نام)
     if request.method == 'POST':
 
         department = Department.objects.all()
         studyField = StudyField.objects.all()
+        education_level = EducationLevel.objects.all()
         
         # گرفتن فرم از اسکریپت فرم
         form = StudentForm(request.POST)
@@ -191,36 +213,45 @@ def student_sing_up_view(request):
 
                 # اگر فرم ولید بود بره به صفحه اس ام اس
                 return redirect("student_sms_signUp_Name")
+            
             # اما اگر رکورد دانشجو پیدا شد بیاد اطلاعات فرم رو آپدیت کنه فقط دیگه نسازه تکراری
             if student_exists == True:
-                student_record = Student.objects.filter(number=request.POST.get('number'), verification_phonenumber='False').first()
+                student = Student.objects.filter(
+                    number=request.POST.get('number'), 
+                    verification_phonenumber='False'
+                    ).first()
                 
-                student_record.name = request.POST.get('name')
-                student_record.number = request.POST.get('number')
 
-                department_id = request.POST.get('department')
-                student_record.department = Department.objects.get(id=department_id)
+                student.name = form.cleaned_data['name']
+                student.number = form.cleaned_data['number']
+                student.department = form.cleaned_data['department']
+                student.field_of_study = form.cleaned_data['field_of_study']
+                student.education_level = form.cleaned_data['education_level']
+                student.password = form.password['password']
+                student.verification_phonenumber = 'False'
+                student.save()
+                request.session['student_id'] = student.id 
 
-                field_of_study_id = request.POST.get('field_of_study')
-                student_record.StudyField = StudyField.objects.get(id=field_of_study_id)
-                
-               
-                student_record.password = request.POST.get('password')
-                student_record.verification_phonenumber = 'False'
-                student_record.save()
+
                 return redirect("student_sms_signUp_Name")
         else:
             # اگر فرم ولید نبود برو و توی همون صفحه ارور هارو برگردون
             print(form.errors)
             department = Department.objects.all()
             studyField = StudyField.objects.all()
-            return render(request, 'main/student_sing_up.html', {'form': form, 'departments':department, 'studyField':studyField})  # اینجا فرم رو مجدداً رندر می‌کنیم که خطاها نمایش داده بشن
+            return render(request, 'main/student_sing_up.html', {'form': form, 
+                                                                 'departments':department, 
+                                                                 'studyField':studyField,
+                                                                 'education_level':education_level})  # اینجا فرم رو مجدداً رندر می‌کنیم که خطاها نمایش داده بشن
     else:
         # اگه ریکوعست پست نبود و گت بود کار خاصی قرار نیست بکنیم
         form = StudentForm()  # برای درخواست‌های GET، فرم خالی رو رندر می‌کنیم
         department = Department.objects.all()
         studyField = StudyField.objects.all()
-        return render(request, 'main/student_sing_up.html', {'form': form, 'departments':department, 'studyField':studyField})
+        return render(request, 'main/student_sing_up.html', {'form': form, 
+                                                             'departments':department, 
+                                                             'studyField':studyField,
+                                                             'education_level':education_level})
     
 
 from django.http import HttpResponse

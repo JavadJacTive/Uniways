@@ -1,210 +1,257 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فرم ورود</title>
+    <title>فرم ثبت‌نام استاد</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <!-- CSS برای زیباسازی -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-
-    <!-- JavaScript برای عملکرد -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         body {
-            background-color: #4b1e3f; /* رنگ بادمجانی */
-            color: white;
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #4b1e3f 0%, #2c0e24 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-            background: #622a51; /* رنگ بادمجانی تیره */
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #622a51;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+        }
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+        h3 {
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #f8c3fe;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .form-label {
+            font-size: 0.9rem;
+            color: #f8c3fe;
+        }
+        .form-control, .form-select {
+            background-color: #7a3460;
+            border: 1px solid #8c3a67;
+            color: #ffffff;
+            border-radius: 8px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #f8c3fe;
+            box-shadow: 0 0 8px rgba(248, 195, 254, 0.5);
+            background-color: #7a3460;
+            color: #ffffff;
+        }
+        .form-control::placeholder {
+            color: #d1a3c7;
         }
         .btn-primary {
-            background-color: #8c3a67;
+            background: linear-gradient(45deg, #8c3a67, #a84e7f);
             border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 700;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
         .btn-primary:hover {
-            background-color: #a84e7f;
+            background: linear-gradient(45deg, #a84e7f, #c26299);
+            transform: translateY(-2px);
         }
-        
-         /* تغییر رنگ پس‌زمینه و متن گزینه‌های لیست */
-        #department option {
-            background-color: #e0b3ff; /* بنفش کم‌رنگ */
-            color: #8200aa9f; /* بنفش پررنگ */
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 5px;
         }
-            
-
-                /* پس‌زمینه منوی کشویی Select2 */
+        .select2-container--default .select2-selection--single {
+            background-color: #7a3460;
+            border: 1px solid #8c3a67;
+            border-radius: 8px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+        }
+        .select2-container--default .select2-selection__rendered {
+            color: #ffffff;
+            line-height: 38px;
+        }
+        .select2-container--default .select2-selection__arrow {
+            height: 38px;
+        }
         .select2-container .select2-dropdown {
-        background-color: #761753 !important; /* پس‌زمینه روشن */
+            background-color: #7a3460;
+            border: 1px solid #8c3a67;
+            border-radius: 8px;
         }
-س
-        /* رنگ متن گزینه‌ها در منوی کشویی */
         .select2-container .select2-results__option {
-        color: #ffffff !important; /* متن مشکی */
+            color: #ffffff;
         }
-
-        /* رنگ پس‌زمینه و متن وقتی گزینه‌ها هاور یا انتخاب می‌شوند */
         .select2-container .select2-results__option--highlighted {
-        background-color: #f8c3fe !important; /* پس‌زمینه آبی (Bootstrap) */
-        color: #520054 !important; /* متن سفید */
-}
-
+            background-color: #f8c3fe;
+            color: #520054;
+        }
+        .login-link {
+            color: #f8c3fe;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .login-link:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
     </style>
 
     <script>
-        
-     $(document).ready(function() {
-        $("#department").select2({
-            placeholder: "یک دانشکده را انتخاب کنید...",
-            allowClear: true
+        $(document).ready(function() {
+            $("#department, #studyfields").select2({
+                placeholder: "لطفاً انتخاب کنید...",
+                allowClear: true,
+                width: '100%',
+                dropdownCssClass: 'custom-dropdown'
+            });
         });
-    });
-
     </script>
-
 </head>
 <body>
-
-    
-
     <div class="container">
         <div class="login-container">
-            
-
-            
-
-                
-
-
-            <h3 class="text-center">استاد محترم(ثبت نام)</h3>
-            
-            /* My Form */
-            <form method="post" accept="{% url 'teacher_sms_signUp_Name' %}">
+            <h3 class="text-center">ثبت‌نام استاد محترم</h3>
+            <form method="post">
                 {% csrf_token %}
                 
-
                 {% if form.errors %}
-                {% for field in form %}
-                    {% for error in field.errors %}
-                            <p style="text-align: right; color: #ff0000;">{{ error|safe }}</p>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="error-message">{{ error|safe }}</p>
                         {% endfor %}
                     {% endfor %}
-                        {% for error in form.non_field_errors %}
-                            <p style="text-align: right; color: #ff0000;">{{ error|safe }}</p>
-                {% endfor %}
-        {% endif %}
-
+                    {% for error in form.non_field_errors %}
+                        <p class="error-message">{{ error|safe }}</p>
+                    {% endfor %}
+                {% endif %}
 
                 <div class="mb-3">
-                    <label for="name" class="form-label">نام</label>
-                    <input   type="text" id="name" name="first_name" class="form-control" required>
+                    <label for="first_name" class="form-label">نام *</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control" maxlength="12" placeholder="نام خود را وارد کنید" required>
                     {% if form.first_name.errors %}
                         {% for error in form.first_name.errors %}
-                            <div style="text-align: center; color: #ff0000;" > {{error}}</div>
+                            <p class="error-message">{{ error }}</p>
                         {% endfor %}
                     {% endif %}
-               
+                </div>
 
                 <div class="mb-3">
-                    <label for="name" class="form-label">نام خانوادگی *</label>
-                    <input type="text" id="name" name="last_name" class="form-control" required>
+                    <label for="last_name" class="form-label">نام خانوادگی *</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control" maxlength="10" placeholder="نام خانوادگی خود را وارد کنید" required>
                     {% if form.last_name.errors %}
                         {% for error in form.last_name.errors %}
-                            <div style="text-align: center; color: #ff0000;"> {{ error }} </div>
+                            <p class="error-message">{{ error }}</p>
                         {% endfor %}
                     {% endif %}
-                 
+                </div>
 
-           
-              
-                </div>
-            
                 <div class="mb-3">
-                    <label for="number" class="form-label">شماره موبایل</label>
-                    <input type="number" id="number" name="number" class="form-control" required>
-                    <!-- اگر ارور داشتیم   -->  
-            {% if form.number.errors %}
-            {% for error in form.number.errors %}
-                <!-- بررسی ارور خومون در فرم-->
-                {% if "already number_teacher" in error %}
-                <div style="text-align: center; color: #ff0000;" > شماره تکراری است! لطفاً شماره دیگری وارد کنید. *</div>
-                <!-- بررسی ارور خود جنگو-->
-                {% elif "This field is required" in error %}
-                <div style="text-align: center; color: #ff0000;"> فیلد شماره خالیه *</div>
-                 <!-- بررسی ارور مربوط به تکراری بودن شماره(ارور خود جنگو) -->
-                  {% elif "Teacher with this Number already exists." in error %}
-                  <div style="text-align: center; color: #ff0000;">
-                    این شماره قبلاً ثبت شده! لطفاً شماره دیگری انتخاب کنید. *
+                    <label for="number" class="form-label">شماره موبایل *</label>
+                    <input type="tel" id="number" name="number" class="form-control" maxlength="11" placeholder="شماره موبایل خود را وارد کنید" required>
+                    {% if form.number.errors %}
+                        {% for error in form.number.errors %}
+                            {% if "already number_teacher" in error %}
+                                <p class="error-message">شماره تکراری است! لطفاً شماره دیگری وارد کنید.</p>
+                            {% elif "This field is required" in error %}
+                                <p class="error-message">فیلد شماره خالی است.</p>
+                            {% elif "Teacher with this Number already exists." in error %}
+                                <p class="error-message">این شماره قبلاً ثبت شده! لطفاً شماره دیگری انتخاب کنید.</p>
+                            {% else %}
+                                <p class="error-message">{{ error }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
-                
-                {% endif %}
-                {% endfor %}
-                {% endif %}
-                </div>
-                
-              
-                
-                <!-- لیست کشویی -->
+
                 <div class="mb-3">
-                    <label for="department" class="form-label">دانشکده</label>
-                    <select id="department" name="department" class="form-select">
-                        <option value="">🔽 لطفاً یک دانشکده انتخاب کنید</option>
+                    <label for="department" class="form-label">دانشکده *</label>
+                    <select id="department" name="department" class="form-select" required>
+                        <option value="">لطفاً یک دانشکده انتخاب کنید</option>
                         {% for department in departments %}
-                        <option value="{{ department.id }}" > {{department.name}} </option>
+                            <option value="{{ department.id }}">{{ department.name }}</option>
                         {% endfor %}
                     </select>
                     {% if form.department.errors %}
-                    {% for error in form.department.errors %}
-    
-                    <!-- بررسی ارور خود جنگو-->
-                    {% if "This field is required" in error %}
-                    <div style="text-align: center; color: #ff0000;" > لطفا یک دانشکده را انتخاب کنید* </div>
-                    {% endif %}
-                    {% endfor %}
-                    {% endif %}
-                </div>
-                
-                
-                <label for="studyfields" class="form-label">رشته</label>
-                <select id="studyfields" name="field_of_study" class="form-select">
-                    <option value="">🔽 لطفاً یک رشته انتخاب کنید</option>
-                    {% for study in studyfields %}
-                    <option value="{{ study.id }}" > {{study.name}} </option>
-                    {% endfor %}
-                </select>
-            
-
-                <div class="mb-3">
-                    <label for="password" class="form-label">رمز عبور</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
-                    {% if form.password.errors %}
-                        {% for error in form.password.errors %}
-                            <div style="text-align: center; color: #ff0000;" > {{ error }} </div>
-            
+                        {% for error in form.department.errors %}
+                            {% if "This field is required" in error %}
+                                <p class="error-message">لطفاً یک دانشکده انتخاب کنید.</p>
+                            {% else %}
+                                <p class="error-message">{{ error }}</p>
+                            {% endif %}
                         {% endfor %}
                     {% endif %}
                 </div>
-            
-                <button type="submit" class="btn btn-primary w-100">ثبت نام</button>
+
+                <div class="mb-3">
+                    <label for="studyfields" class="form-label">رشته *</label>
+                    <select id="studyfields" name="field_of_study" class="form-select" required>
+                        <option value="">لطفاً یک رشته انتخاب کنید</option>
+                        {% for study in studyfields %}
+                            <option value="{{ study.id }}">{{ study.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if form.field_of_study.errors %}
+                        {% for error in form.field_of_study.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+
+
+                <div class="mb-3">
+                    <label for="education_level" class="form-label">مقطع تحصیلی</label>
+                    <select id="education_level" name="education_level" class="form-select" required>
+                        <option value="">مقطع تحصیلی</option>
+                        {% for education in education_level %}
+                            <option value="{{ education.id }}">{{ education.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if form.education_level.errors %}
+                        {% for error in form.education_level.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+
+
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">رمز عبور *</label>
+                    <input type="password" id="password" name="password" class="form-control" maxlength="80" placeholder="رمز عبور خود را وارد کنید" required>
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">ثبت‌نام</button>
             </form>
-            <p> از قبل ثبت نام کردی؟ پس (<a href="/teacher/login/"> ورود </a>)
+            <p class="text-center mt-3">
+                از قبل ثبت‌نام کرده‌اید؟ <a href="/teacher/login/" class="login-link">ورود</a>
             </p>
-
-
         </div>
     </div>
-
-   
-   
-      
 </body>
 </html>

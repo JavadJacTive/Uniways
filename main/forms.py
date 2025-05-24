@@ -1,5 +1,5 @@
 from django import forms
-from main.models import Student, Teacher, Department, StudyField
+from main.models import Student, Teacher, Department, StudyField, EducationLevel
 from django.core.exceptions import ValidationError
 import re
 
@@ -9,20 +9,37 @@ class StudentForm(forms.ModelForm):
     name = forms.CharField(required=True, error_messages={'required': '🡷 لطفا نام خود را وارد کنید 🡷'})
     number = forms.CharField(required=True, error_messages={'required': ' 🡷 لطفا شماره خود را وارد کنید 🡷'})
     email = forms.CharField(required=True,  error_messages={'required': ' 🡷 لطفا ایمیل  خود را وارد کنید 🡷'})
-    department = forms.CharField(required=True,  error_messages={'required': ' 🡷 لطفا دانشکده  خود را انتخاب کنید 🡷'})
-    
-    field_of_study = forms.CharField(required=True,  error_messages={'required': '🡷 لطفا رشته  خود را انتخاب کنید  🡷'})
     password = forms.CharField(required=True,  error_messages={'required': 'لطفا رمز  خود را وارد کنید'})
     
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(),
+        required=True,
+        error_messages={'required': "لطفا دانشکده خود را انتخاب کنید"}
+    )
+
+
+    field_of_study = forms.ModelChoiceField(
+        queryset=StudyField.objects.all(),
+        required=True,
+        error_messages={'required': "لطفا رشته خود را انتخاب کنید"}
+    )
+    
+    education_level = forms.ModelChoiceField(
+        queryset=EducationLevel.objects.all(),
+        required=True,
+        error_messages={'required': "لطفا مقطع تحصیلی خود را انتخاب کنید"}
+    )
+    
+
     class Meta:
         model = Student
-        fields = ['name', 'number', 'email', 'department',  'field_of_study', 'password']
+        fields = ['name', 'number', 'email', 'department',  'field_of_study', 'education_level', 'password']
         
     
     def clean_name(self):
         name = self.cleaned_data.get('name', '').strip()
 
-        if len(name) > 100 :
+        if len(name) > 20 :
             raise ValidationError("طول نام وارد شده خیلی زیاد است")
 
         return name
@@ -41,6 +58,8 @@ class StudentForm(forms.ModelForm):
         # بررسی فرمت شماره
         if not re.match(pattern, number):
             raise ValidationError(f"فرمت اشتباه است! فرمت صحیح: 09123456789 <br> چیزی که وارد کرده بودی: {number}")
+        
+        
 
         return number
     
@@ -53,27 +72,7 @@ class StudentForm(forms.ModelForm):
         
         return email
 
-    def clean_department(self):
-        
-        # آیدی دانشکده رو میگیریم از فرانت
-        department_id = self.cleaned_data.get('department')
-        
-        print(f"][][][][][[][][][][][]]\n \n {department_id} \n ][][][][][][][][]")
-        department = Department.objects.get(id=department_id)
-        return department
-
-    def clean_field_of_study(self):
-        StudyField_id = self.cleaned_data.get('field_of_study')
-        field_of_study = StudyField.objects.get(id=StudyField_id)
-        return field_of_study
     
-    def clean_password(self):
-        password = self.cleaned_data.get("password", '').strip()
-        
-        if len(password) < 5:
-            raise ValidationError("پسورد بالای 5 حرف باشد و فقط عبارات انگلیسی و عدد")
-
-        return password
 
 
 class StudentForm_login(forms.Form):
@@ -120,32 +119,44 @@ class StudentForm_login(forms.Form):
             
 
 class TeacherForm(forms.ModelForm):
+    education_level = forms.ModelChoiceField(
+        queryset=EducationLevel.objects.all(),
+        required=True,
+        error_messages={'required': "لطفا مقطع خود را انتخاب کنید"}
+    )
+
+    field_of_study = forms.ModelChoiceField(
+        queryset=StudyField.objects.all(),
+        required=True,
+        error_messages={'required': "لطفا رشته خود را انتخاب کنید"}
+    )
+  
+
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(),
+        required=True,
+        error_messages={'required': "لطفا دانشکده خود را انتخاب کنید"}
+
+    )
+
+
+
+
+
     
+
     class Meta:
         model = Teacher 
-        fields = ['first_name', 'last_name', 'department', 'field_of_study', 'number', 'password']
+        fields = ['first_name', 'last_name', 'department', 'field_of_study', 'education_level', 'number', 'password']
 
    
   
-    # Already number ? 
-    def clean_number(self):
-        number = self.cleaned_data.get('number', '').strip()
-       
-        # ارور های مربوط به تکراری بودن شماره
-        # بررسی وجود داشتن فیلد شماره و برگردوندن ارور در فایل ساین آپ فرانت
-        if Student.objects.filter(number=number).exists():
-            raise forms.ValidationError("already number_teacher")
-
-         # بررسی شماره در مدل Teacher (برای جلوگیری از ارور پیش‌فرض unique)
-        if Teacher.objects.filter(number=number).exists():
-            raise forms.ValidationError("Teacher with this Number already exists.")
-        
-        return number
+    
     
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name', '').strip()
 
-        if len(str(first_name)) > 10:
+        if len(str(first_name)) > 12:
             raise forms.ValidationError("طول کاراکتر های نام شما زیاد است حداکثر: 10 کاراکتر")
 
         return first_name
@@ -153,7 +164,7 @@ class TeacherForm(forms.ModelForm):
     def clean_last_name(self):
         last_name = self.cleaned_data.get('last_name', '').strip()
 
-        if len(str(last_name)) > 10:
+        if len(str(last_name)) > 12:
             raise forms.ValidationError("طول کاراکتر های نام‌خانوادگی شما زیاد است حداکثر: 10 کاراکتر")
         
         return last_name
@@ -161,10 +172,24 @@ class TeacherForm(forms.ModelForm):
     def clean_password(self):
         password = self.cleaned_data.get('password', '').strip()
 
-        if len(str(password)) > 120:
+        if len(str(password)) > 85:
             raise forms.ValidationError("طول کاراکتر های رمز شما زیاد است حداکثر: 120 کاراکتر")
 
         return password
+    
+    def clean_number(self):
+        number = self.cleaned_data.get('number', '').strip()
+        pattern = r'^09\d{9}$'
+        
+        # فقط اگر شماره با verification_phonenumber='True' وجود داشته باشد، خطا بده
+        if Teacher.objects.filter(number=number, verification_phonenumber='True').exists():
+            raise ValidationError(f"شماره ای که وارد کردین از قبل ثبت نام شده است. <br> شماره‌ای که وارد کردی: {number}")
+        
+        # بررسی فرمت شماره
+        if not re.match(pattern, number):
+            raise ValidationError(f"فرمت اشتباه است! فرمت صحیح: 09123456789 <br> چیزی که وارد کرده بودی: {number}")
+        
+        return number
 
 class TeacherForm_login(forms.Form):
     

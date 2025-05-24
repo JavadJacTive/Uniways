@@ -1,139 +1,228 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>صفحه ورود استاد محترم</title>
-  <style>
-    /* تنظیمات کلی صفحه */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-      background-color: #47086b; /* رنگ پس‌زمینه اصلی */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      box-sizing: border-box;
-      
-      height: 100vh; /* این تضمین می‌کنه که کل ارتفاع صفحه پوشش داده بشه */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>صفحه ورود استاد محترم</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazir-font@32.0.0/dist/font-face.css">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
 
+    <style>
+        :root {
+            --primary-color: #4b1e3f;
+            --dark-color: #622a51;
+            --button-color: #8c3a67;
+            --button-hover: #a84e7f;
+            --select-bg: #761753;
+            --select-highlight: #f8c3fe;
+            --select-text: #520054;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* کانتینر فرم */
-    .form-container {
-      background-color: #5A2E62; /* رنگ پس‌زمینه فرم (کمی روشن‌تر از پس‌زمینه صفحه) */
-      padding: 2rem;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      
-    }
+        body {
+            background: linear-gradient(45deg, var(--primary-color), #6b2d5c, var(--primary-color));
+            background-size: 200% 200%;
+            animation: gradientFlow 15s ease infinite;
+            color: white;
+            font-family: 'Vazir', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
 
-    /* عنوان بالای فرم */
-    .form-container h2 {
-      margin: 0 0 1rem;
-      text-align: center;
-      color: #fff;
-    }
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    /* برچسب‌های فیلد */
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #fff;
-      font-weight: bold;
-      font-size: 0.95rem;
-    }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
 
-    /* ورودی‌ها */
-    input[type="text"],
-    input[type="password"] {
-      width: 93%;
-      padding: 0.7rem;
-      margin-bottom: 1.2rem;
-      border: none;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      
-    }
+        .login-container {
+            max-width: 90vw;
+            width: 400px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: var(--dark-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
 
-    /* دکمه ارسال */
-    button {
-      width: 100%;
-      padding: 0.8rem;
-      background-color: #D81B60; /* رنگ دلخواه برای دکمه */
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
-      color: #fff;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
 
-    button:hover {
-      background-color: #c2185b;
-    }
+        .form-label {
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            margin-bottom: 0.5rem;
+        }
 
-    /* ریسپانسیو برای نمایشگرهای کوچک‌تر */
-    @media (max-width: 480px) {
-      .form-container {
-        padding: 1rem;
-        margin: 0 1rem;
-      }
-      label {
-        font-size: 0.9rem;
-      }
-      input[type="text"],
-      input[type="password"] {
-        font-size: 0.85rem;
-      }
-      button {
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+        .form-control {
+            background-color: #f8c3fe;
+            color: var(--select-text);
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            padding: 0.75rem;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 8px var(--button-hover);
+            background-color: #fff;
+        }
+
+        .btn-primary {
+            background-color: var(--button-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.05);
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        a {
+            color: #f8c3fe;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--button-hover);
+        }
+
+        /* Smartwatch and small screen support */
+        @media (max-width: 576px) {
+            .login-container {
+                width: 95vw;
+                margin: 1rem auto;
+                padding: 1rem;
+            }
+
+            .form-control, .btn-primary {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 300px) { /* Smartwatch */
+            .login-container {
+                width: 98vw;
+                padding: 0.75rem;
+            }
+
+            .form-control, .btn-primary {
+                font-size: 0.8rem;
+                padding: 0.4rem;
+            }
+
+            h2 {
+                font-size: 1rem;
+            }
+
+            .form-label {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  
+    <div id="particles-js"></div>
+    <div class="form-container login-container">
+        <h2 class="text-center">استاد محترم (ورود)</h2>
+        <form method="post" action="{% url 'teacher_login_view_name' %}">
+            {% csrf_token %}
+            {% if form.errors or form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <p class="error-message">{{ error }}</p>
+                {% endfor %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p class="error-message">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
 
-  <div class="form-container">
-    <h2>استاد محترم (ورود)</h2>
-    <form method="post" action="{% url 'teacher_login_view_name' %}">
-      {% csrf_token %}
-      <h1> {{ form.errors }} </h1>
+            <div class="mb-3">
+                <label for="mobile" class="form-label">شماره موبایل</label>
+                <input type="tel" id="mobile" name="number" class="form-control" maxlength="11" placeholder="09123654987" required>
+            </div>
 
-      <label for="mobile">شماره موبایل</label>
-      <input type="text" id="mobile" name="number" placeholder="شماره موبایل خود را وارد کنید" />
+            <div class="mb-3">
+                <label for="password" class="form-label">رمز عبور</label>
+                <input type="password" id="password" name="password" class="form-control" maxlength="80" required>
+            </div>
 
-      <label for="password">رمز عبور</label>
-      <input type="password" id="password" name="password" placeholder="رمز عبور خود را وارد کنید" />
+            <button type="submit" class="btn btn-primary">ورود</button>
+        </form>
+    </div>
 
-      {% if form.non_field_errors %}
-        <p style="color: red;">{{ form.non_field_errors.0 }}</p>
-      {% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize particles.js
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 50, density: { enable: true, value_area: 800 } },
+                    color: { value: ['#f8c3fe', '#e0b3ff', '#a84e7f'] },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.5, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1 } },
+                    size: { value: 3, random: true, anim: { enable: true, speed: 2 } },
+                    line_linked: { enable: false },
+                    move: { enable: true, speed: 1, direction: 'none', random: true, straight: false, out_mode: 'out' }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+                    modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } }
+                },
+                retina_detect: true
+            });
 
-      
-      <button type="submit" >ورود</button>
-      
-      
-     
-     
-
-    </form>
-
-    
-  </div>
-
-
-
-
-
-  <script>
-    
-</script>
+            // Optimize form input for low-end devices
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('touchstart', () => input.focus(), { passive: true });
+            });
+        });
+    </script>
 </body>
 </html>
