@@ -1,0 +1,290 @@
+{% load static %}
+{% load jalali_tags %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <!-- CSS for Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- JS for Flatpickr -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فرم تاریخ جلالی</title>
+    
+    <link rel="stylesheet" href="{% static 'blog/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/django_jalali.min.css' %}">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #3b0a45, #5e2b5b);
+            color: #fff;
+            overflow-x: hidden;
+            background-repeat: no-repeat;
+            background-size: cover;
+            min-height: 100vh;
+
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 90%;
+            margin: 60px auto;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 25px 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fbd2f0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #ffe4f8;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 8px 12px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            background-color: #c57db5;
+            border: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #a36697;
+        }
+
+        .date-display {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #ffc7f6;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .btn-primary {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            .date-display {
+                font-size: 14px;
+            }
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 8px 12px;
+            width: 100%;
+            margin-bottom: 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .select-dropdown {
+  padding: 10px 16px;
+  border: 2px solid #7D3C98;           /* بنفش بادمجونی */
+  border-radius: 10px;
+  background-color: #E8DAEF;           /* بنفش ملایم‌تر و تیره‌تر */
+  color: #4A235A;                      /* بنفش بادمجونی تیره‌تر برای متن */
+  font-size: 16px;
+  font-family: sans-serif;
+
+  /* فلش سفارشی */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg fill='%234A235A' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px;
+  padding-right: 40px;  /* برای فاصله دادن به فلش */
+
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+
+.select-dropdown:focus {
+  border-color: #6C3483;
+  background-color: #D2B4DE;
+  box-shadow: 0 0 6px #A569BD;
+  outline: none;
+}
+.form-group {
+  margin-bottom: 25px;
+}
+
+form select {
+  width: 100%;
+}
+
+select {
+  direction: rtl;
+}
+
+input[type="text"],
+select {
+  font-size: 15px;
+  padding: 10px 12px;
+}
+
+/* اگه خواستی فلش‌های select زیباتر بشن برای موبایل */
+@media (max-width: 480px) {
+  .form-control,
+  .select-dropdown {
+    font-size: 15px;
+    padding: 10px 12px;
+  }
+}
+
+    </style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<div class="container">
+    <h1>فرم انتخاب تاریخ</h1>
+
+    <p class="date-display">
+        تاریخ امروز : {{ current_time|to_jalali:'%Y/%m/%d' }}
+    </p>
+
+    <form method="post" action="{% url 'upload_post_name' teacher.id %}">
+        {% csrf_token %}
+
+
+        <div class="form-group">
+            <label for="{{ form.lesson_name.id_for_label }}">نام درس</label>
+            {{ form.lesson_name }}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">محل برگزاری</label>
+            {{ form.title }}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.lesson_type.id_for_label }}">نوع درس</label>
+            {{ form.lesson_type }}
+        </div>
+    
+        <div class="form-group">
+            <label for="id_class_time">ساعت کلاس</label>
+           {{ form.class_time }}
+        </div>
+    
+        <div class="form-group">
+            <label for="{{ form.class_date.id_for_label }}">تاریخ کلاس</label>
+            {{ form.class_date }}
+        </div>
+
+
+        <div class="form-group">
+            <label for="{{ form.class_date.id_for_label }}">تاریخ کلاس</label>
+            {{ form.class_date }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.teacher_delay.id_for_label }}">تاخیر استاد(در صورت نیاز)</label>
+            {{ form.teacher_delay }}
+        </div>
+    
+        <button style="color:#ffffff ; font-size: 20px;" type="submit" class="btn btn-primary">ارسال</button>
+    </form>
+    
+</div>
+
+<script src="{% static 'admin/js/django_jalali.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+
+
+    flatpickr("#id_class_time", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i", // فرمت ۲۴ ساعته
+        time_24hr: true // اجباری کردن فرمت ۲۴ ساعته
+    });
+
+
+particlesJS("particles-js", {
+  "particles": {
+    "number": { "value": 100 },
+    "color": { "value": "#ffffff" },
+    "shape": { "type": "circle" },
+    "opacity": { "value": 0.4, "random": true },
+    "size": { "value": 3, "random": true },
+    "line_linked": { "enable": false },
+    "move": {
+      "enable": true,
+      "speed": 0.6,
+      "random": true,
+      "out_mode": "out"
+    }
+  },
+  "interactivity": {
+    "events": {
+      "onhover": { "enable": false },
+      "onclick": { "enable": false },
+      "resize": true
+    }
+  },
+  "retina_detect": true
+});
+</script>
+
+</body>
+</html>

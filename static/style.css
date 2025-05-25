@@ -1,0 +1,65 @@
+/* فونت و استایل کلی */
+body {
+    font-family: 'Vazir', Arial, sans-serif; /* فونت وزیر */
+    background: linear-gradient(135deg, #3c0031, #5a064b, rgb(87, 1, 71), #2b0024); /* گرادیانت زنده */
+    background-size: 200% 200%;
+    animation: gradientMove 15s ease infinite; /* انیمیشن ملایم */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    direction: rtl; /* برای راست‌چین بودن */
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+}
+
+/* کانتینر دکمه‌ها */
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+}
+
+/* استایل دکمه‌ها */
+.btn {
+    width: 85%;
+    max-width: 320px;
+    padding: 18px;
+    border: none;
+    border-radius: 50px; /* دکمه گردتر */
+    background: linear-gradient(135deg, #8000a3, #60005d);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Vazir', Arial, sans-serif; /* اعمال فونت وزیر روی دکمه‌ها */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 15px #2b0024;
+}
+
+/* افکت هاور و کلیک */
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 20px rgb(55, 1, 69);
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+/* استایل مخصوص موبایل */
+@media (max-width: 600px) {
+    .btn {
+        width: 90%;
+        font-size: 22px;
+        padding: 20px;
+    }
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود دانشجو گل</title>
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <style>
+        /* تنظیمات کلی صفحه */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazir', Arial, sans-serif; /* فونت فارسی */
+            background: linear-gradient(135deg, #4C2249, #5A2E62, #5c0065, #4C2249); /* رنگ‌های ملایم */
+            background-size: 200% 200%;
+            animation: gradientMove 15s ease infinite; /* انیمیشن ملایم */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        /* کانتینر فرم */
+        .form-container {
+            background: rgba(90, 46, 98, 0.9); /* کمی شفاف‌تر */
+            padding: 2rem;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+            margin: 1rem;
+        }
+
+        /* عنوان بالای فرم */
+        .form-container h2 {
+            margin: 0 0 1.5rem;
+            text-align: center;
+            color: #fff;
+            font-size: clamp(1.5rem, 5vw, 2rem);
+        }
+
+        /* برچسب‌های فیلد */
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            font-weight: bold;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+        }
+
+        /* ورودی‌ها */
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-sizing: border-box;
+            transition: background 0.3s;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+
+        /* پیام‌های خطا */
+        p[style*="color: #ff0000"] {
+            margin: 0 0 1rem;
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            text-align: center;
+        }
+
+        /* دکمه ارسال */
+        button {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(45deg, #D81B60, #c2185b); /* گرادیانت برای دکمه */
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            color: #fff;
+            font-family: 'Vazir', Arial, sans-serif; /* اعمال فونت وزیر روی دکمه */
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ریسپانسیو برای نمایشگرهای کوچک‌تر */
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            label {
+                font-size: 0.9rem;
+            }
+            input[type="text"],
+            input[type="password"] {
+                padding: 0.7rem;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+            button {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>دانشجوی گل (ورود)</h2>
+        <form method="post" action="{% url 'student_login_view_name' %}">
+            {% csrf_token %}
+            <label for="mobile">شماره موبایل</label>
+            {% if form.number.errors %}
+                {% for error in form.number.errors %}
+                    <p style="color: #ff0000;">{{ error|safe }}</p>
+                {% endfor %}
+            {% endif %}
+            <input type="text" id="mobile" name="number" placeholder="شماره موبایل خود را وارد کنید" />
+
+            <label for="password">رمز عبور</label>
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                    <p style="color: #ff0000;">{{ error|safe }}</p>
+                {% endfor %}
+            {% endif %}
+            <input type="password" id="password" name="password" placeholder="رمز عبور خود را وارد کنید" />
+
+            <!-- ارور در صورت نبودن یا اشتباه بودن رمز یا شماره -->
+            {% if error_message %}
+                <p style="color: #ff0000;">{{ error_message }}</p>
+            {% endif %}
+            <button type="submit">ورود</button>
+            
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,612 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پروفایل کاربر</title>
+    <!-- فونت Vazir از CDN -->
+    <link href="https://cdn.fontlibrary.ir/vazir/vazir.css" rel="stylesheet">
+    <!-- Vanilla Tilt برای افکت 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+    <style>
+        * {
+            font-family: 'Vazir', sans-serif !important;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #2c003e, #4b0082, #3f0066, #2c003e);
+            background-size: 300% 300%;
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            display: block;
+            justify-content: center;
+            align-items: flex-start;
+            animation: gradientMove 12s ease infinite;
+            position: relative;
+            overflow: auto;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+        .profile-container, .blog {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            margin: 15px auto;
+            backdrop-filter: blur(10px);
+        }
+        .profile-container {
+            padding-bottom: 60px;
+            margin-bottom: 30px; /* افزایش فاصله پایین */
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .profile-btn {
+            background: linear-gradient(45deg, #ff4b5c, #ff8c94);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 75, 92, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            animation: glow 2s ease-in-out infinite;
+            max-width: 150px;
+            margin: 0 auto;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 4px 15px rgba(255, 75, 92, 0.4); }
+            50% { box-shadow: 0 6px 25px rgba(255, 75, 92, 0.6); }
+            100% { box-shadow: 0 4px 15px rgba(255, 75, 92, 0.4); }
+        }
+        .profile-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        .profile-btn:hover::before {
+            left: 100%;
+        }
+        .profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 75, 92, 0.6);
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px; /* افزایش عرض */
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.5s ease, opacity 0.3s ease;
+            z-index: 2000;
+            border: solid 3px #3f0066;
+            border-radius: 10px;
+        }
+        .dropdown-menu.active {
+            max-height: 300px;
+            opacity: 0.95;
+            padding: 5px 0;
+        }
+        .dropdown-item {
+            padding: 6px 12px; /* کاهش بیشتر padding */
+            color: white;
+            text-align: center;
+            font-size: 11px; /* کاهش بیشتر فونت */
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .dropdown-item:hover {
+            background: rgba(255, 75, 92, 0.3);
+        }
+        .faculty-info {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: right;
+            direction: rtl;
+            flex-shrink: 0;
+            min-width: 0;
+        }
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff8c94, #ff4b5c);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 75, 92, 0.3);
+        }
+        h2 {
+            font-size: clamp(1rem, 3vw, 1.6rem);
+            margin: 5px 0;
+            font-weight: 700;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: white;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            text-align: right;
+            direction: rtl;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+        }
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: right;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        .search-box:focus {
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            stroke: rgba(255, 255, 255, 0.5);
+        }
+        .student-info {
+            margin-top: 15px;
+        }
+        p {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            margin: 5px 0;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .post-tile {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: right;
+            direction: rtl;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 75, 92, 0.2), 0 0 25px rgba(255, 75, 92, 0.1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            will-change: transform, opacity, filter;
+        }
+        .post-tile:nth-child(1) { animation: waveIn 0.6s ease-in-out 0.1s forwards; }
+        .post-tile:nth-child(2) { animation: waveIn 0.6s ease-in-out 0.2s forwards; }
+        .post-tile:nth-child(3) { animation: waveIn 0.6s ease-in-out 0.3s forwards; }
+        .post-tile:nth-child(n+4) { animation: waveIn 0.6s ease-in-out 0.4s forwards; }
+        @keyframes waveIn {
+            0% { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(5px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        .post-tile:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 30px rgba(255, 75, 92, 0.4), 0 0 40px rgba(255, 75, 92, 0.2);
+        }
+        .post-tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 75, 92, 0.1), rgba(255, 140, 148, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        .post-tile:hover::before {
+            opacity: 1;
+        }
+        .post-tile h2 {
+            font-size: clamp(1.6rem, 4vw, 2rem);
+            margin: 0 0 12px;
+            background: linear-gradient(45deg, #ff4b5c, #ff8c94);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 6px rgba(255, 75, 92, 0.3);
+            animation: pulseGlow 3s ease-in-out infinite;
+            font-weight: 700;
+        }
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 2px 6px rgba(255, 75, 92, 0.3); }
+            50% { text-shadow: 0 2px 10px rgba(255, 75, 92, 0.5); }
+            100% { text-shadow: 0 2px 6px rgba(255, 75, 92, 0.3); }
+        }
+        .post-teacher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: white;
+            margin: 8px 0;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        .post-teacher svg {
+            stroke: url(#teacher-gradient);
+            animation: iconPulse 2s ease-in-out infinite;
+            will-change: transform;
+        }
+        @keyframes iconPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .post-info {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin: 8px 0;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+        .post-title {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            margin: 8px 0;
+            line-height: 1.7;
+            background: linear-gradient(45deg, #ff6b78, #ffb3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: waveText 4s ease-in-out infinite;
+            font-weight: 500;
+        }
+        @keyframes waveText {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+        .post-details {
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            margin: 8px 0;
+            font-weight: 300;
+        }
+        @media (max-width: 400px) {
+            .header {
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 5px;
+            }
+            .faculty-info {
+                text-align: center;
+                gap: 5px;
+                flex-shrink: 0;
+                min-width: 0;
+            }
+            .profile-pic {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+            .profile-btn {
+                width: 100%;
+                max-width: 150px;
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+            .search-container {
+                width: 100%;
+                max-width: none;
+                margin-top: 5px;
+            }
+            .search-box {
+                padding: 8px 30px 8px 10px;
+                border-radius: 20px;
+            }
+            .search-icon {
+                width: 16px;
+                height: 16px;
+                left: 6px;
+            }
+            .dropdown-menu {
+                top: 100%;
+                width: 100%;
+                max-width: 500px; /* افزایش عرض در موبایل */
+                left: 50%;
+                transform: translateX(-50%);
+                
+            }
+            .post-tile {
+                padding: 15px;
+                margin-bottom: 10px;
+            }
+            .post-tile:hover {
+                transform: translateY(-3px) scale(1.02);
+            }
+            .post-teacher svg {
+                width: 18px;
+                height: 18px;
+            }
+            .post-tile h2 {
+                font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    <div class="profile-container">
+        <div class="header">
+            <div style="position: relative;">
+                <button class="profile-btn" onclick="toggleDropdown()">پروفایل</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <div class="dropdown-item" onclick="window.location.href='#buy-subscription'">خرید اشتراک</div>
+                    <div class="dropdown-item" onclick="window.location.href='#forgot-password'">فراموشی رمز</div>
+                    <div class="dropdown-item" onclick="window.location.href='#support'">تماس با پشتیبانی</div>
+                    <form method="post" action="{% url 'logout_student_name' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item" style="background: none; border: none; width: 100%; text-align: center;">خروج</button>
+                    </form>
+                </div>
+            </div>
+            <div class="faculty-info">
+                <div>
+                    <h2>{{ student.name }}</h2>
+                    <p>{{ student.department }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="جستجوی کلاس یا استاد">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+        </div>
+        <div class="student-info">
+            <!-- اطلاعات اضافی اگه بخوای -->
+        </div>
+    </div>
+    <div class="blog">
+        {% for post in posts %}
+        <div class="post-tile" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-perspective="1000">
+            <h2>{{ post.lesson_name }}</h2>
+            <div class="post-teacher">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <defs>
+                        <linearGradient id="teacher-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff4b5c;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#ff8c94;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/>
+                    <path d="M12 14c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"/>
+                </svg>
+                <span>{{ post.teacher }}</span>
+            </div>
+            <div class="post-info">تاریخ: {{ post.class_date }}</div>
+            <div class="post-title">محل: {{ post.title }}</div>
+            <div class="post-details">تأخیر استاد: {{ post.teacher_delay }}</div>
+            <div class="post-details">توضیحات: {{ post.description }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            const btnRect = document.querySelector('.profile-btn').getBoundingClientRect();
+            const dropdownHeight = dropdown.scrollHeight;
+            const windowHeight = window.innerHeight;
+            const scrollY = window.scrollY;
+
+            if (btnRect.bottom + dropdownHeight > windowHeight + scrollY) {
+                dropdown.style.top = '-100%';
+                dropdown.style.bottom = 'auto';
+            } else {
+                dropdown.style.top = '35px';
+                dropdown.style.bottom = 'auto';
+            }
+
+            dropdown.classList.toggle('active');
+            if (dropdown.classList.contains('active')) {
+                dropdown.style.maxHeight = `${dropdown.scrollHeight}px`;
+            } else {
+                dropdown.style.maxHeight = '0';
+            }
+        }
+
+        function createParticleBurst(x, y) {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            const particles = [];
+            for (let i = 0; i < 10; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    size: Math.random() * 3 + 1,
+                    speedX: Math.random() * 6 - 3,
+                    speedY: Math.random() * 6 - 3,
+                    opacity: 1,
+                    color: ['#ff4b5c', '#ff8c94', '#ffb3b8'][Math.floor(Math.random() * 3)]
+                });
+            }
+            function animateBurst() {
+                particles.forEach((p, i) => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    p.opacity -= 0.02;
+                    p.size *= 0.95;
+                    if (p.opacity <= 0 || p.size <= 0.1) {
+                        particles.splice(i, 1);
+                        return;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.opacity;
+                    ctx.fill();
+                });
+                if (particles.length > 0) {
+                    requestAnimationFrame(animateBurst);
+                }
+            }
+            animateBurst();
+        }
+
+        document.querySelectorAll('.post-tile').forEach(tile => {
+            tile.addEventListener('click', (e) => {
+                const rect = tile.getBoundingClientRect();
+                const x = e.clientX - rect.left + window.scrollX;
+                const y = e.clientY - rect.top + window.scrollY;
+                createParticleBurst(x, y);
+            });
+        });
+
+        if (window.innerWidth > 400) {
+            document.querySelectorAll('.post-tile').forEach(tile => {
+                VanillaTilt.init(tile, {
+                    max: 10,
+                    speed: 400,
+                    perspective: 1000
+                });
+            });
+        }
+
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const numParticles = 30;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                this.color = ['#ff8c94', '#6a00b3', '#ffffff', '#ff4b5c'][Math.floor(Math.random() * 4)];
+                this.opacity = Math.random() * 0.4 + 0.3;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                this.opacity = 0.3 + Math.sin(Date.now() * 0.001) * 0.2;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.fill();
+            }
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 80) {
+                        ctx.strokeStyle = `rgba(255, 140, 148, ${1 - distance / 80})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        let lastFrameTime = 0;
+        const frameInterval = 1000 / 60;
+        function animate(currentTime) {
+            if (currentTime - lastFrameTime < frameInterval) {
+                requestAnimationFrame(animate);
+                return;
+            }
+            lastFrameTime = currentTime;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            connectParticles();
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html> 

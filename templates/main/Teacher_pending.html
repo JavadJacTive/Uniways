@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Teachers</title>
+    <style>
+        body {
+            background-color: #4b0082; /* بنفش تیره برای پس‌زمینه */
+            font-family: 'Arial', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* چیدمان عمودی */
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #fff;
+            background-color: #6a1b9a; /* بنفش روشن‌تر برای عنوان */
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            width: 80%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .teacher-info {
+            background-color: #8e24aa; /* رنگ بنفش تیره‌تر برای اطلاعات معلم */
+            border-radius: 10px;
+            margin-top: 15px;
+            padding: 20px;
+            width: 80%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .teacher-info h1 {
+            margin: 10px 0;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        /* برای ریسپانسیو */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .teacher-info h1 {
+                font-size: 1rem;
+            }
+
+            .teacher-info {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+
+                .button-approve {
+            background-color: #6A0572;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .button-reject {
+            background-color: #45043D;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .button-approve:hover {
+            background-color: #840AA0;
+        }
+
+        .button-reject:hover {
+            background-color: #5A054D;
+        }
+
+        @media (max-width: 600px) {
+            .button-approve, .button-reject {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Pending Teachers</h1>
+    {% for teacher_ in teachers_status %}
+        <div class="teacher-info">
+            <h1>{{ teacher_.first_name }} {{ teacher_.last_name }}</h1>
+            <h1>Number: {{ teacher_.number }}</h1>
+            <h1>Department: {{ teacher_.department }}</h1>
+            
+            <form method="POST" action="{% url 'approve_teacher_name' teacher_.id %}">
+                {% csrf_token %}
+                <button type="submit" name="action" value="approve" class="button-approve">Accept</button>
+                <button type="submit" name="action" value="reject" class="button-reject">Reject</button>
+            </form>
+
+        </div>
+    {% endfor %}
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه ریسپانسیو</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <button onclick="window.location.href='{% url 'student_sing_up_name' %}'" class="btn">ورود دانشجو</button>  
+        <button onclick="window.location.href='{% url 'teacher_sing_up_name' %}'" class="btn">ورود استاد</button>
+    </div>
+</body>
+</html>

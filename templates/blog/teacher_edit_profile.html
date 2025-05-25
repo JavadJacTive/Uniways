@@ -1,0 +1,249 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ویرایش پروفایل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet" media="screen">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #4b0082 0%, #800080 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: clamp(10px, 2vw, 15px);
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(15px, 3vw, 20px);
+        }
+        .navbar {
+            background: rgba(75, 0, 130, 0.9);
+            padding: clamp(12px, 2.5vw, 15px);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+        }
+        .navbar-brand {
+            font-size: clamp(1.4rem, 3.5vw, 1.6rem);
+            color: #f8c3fe;
+            font-weight: 700;
+        }
+        .nav-links {
+            display: flex;
+            gap: clamp(12px, 2.5vw, 18px);
+        }
+        .nav-links a {
+            color: #e0b3ff;
+            text-decoration: none;
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #c08be8;
+        }
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+        }
+        .menu-toggle svg {
+            width: 28px;
+            height: 28px;
+            fill: #f8c3fe;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: clamp(15px, 3vw, 20px);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        h1 {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            font-weight: 700;
+            color: #f8c3fe;
+            margin: 0 0 1rem;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: clamp(15px, 3vw, 20px);
+        }
+        .form-group label {
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            color: #e0b3ff;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .form-group input {
+            width: 100%;
+            padding: clamp(8px, 2vw, 10px);
+            border-radius: 8px;
+            border: 1px solid #8c3a67;
+            background: #7a3460;
+            color: #fff;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #f8c3fe;
+            box-shadow: 0 0 6px rgba(248, 195, 254, 0.5);
+        }
+        .form-group input::placeholder {
+            color: #d1a3c7;
+        }
+        .error {
+            color: #ff4d4d;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            margin-top: 5px;
+            display: none;
+        }
+        .btn {
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 18px);
+            background: #800080;
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            font-weight: 400;
+            margin: 15px auto 0;
+            width: fit-content;
+        }
+        .btn:hover {
+            background: #c08be8;
+            transform: translateY(-3px);
+        }
+        .btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #fff;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                right: 15px;
+                background: rgba(75, 0, 130, 0.95);
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .card {
+                padding: clamp(12px, 2.5vw, 15px);
+            }
+            h1 {
+                font-size: clamp(1.3rem, 3.5vw, 1.5rem);
+            }
+        }
+        @media (max-width: 360px) {
+            .container {
+                padding: 8px;
+            }
+            .form-group input {
+                padding: clamp(6px, 1.8vw, 8px);
+                font-size: clamp(0.8rem, 2vw, 0.9rem);
+            }
+            .btn {
+                padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 12px);
+                font-size: clamp(0.8rem, 2vw, 0.9rem);
+            }
+            .navbar-brand {
+                font-size: clamp(1.1rem, 3vw, 1.3rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-brand">ویرایش پروفایل</div>
+        <div class="nav-links" id="nav-links">
+            <a href="">پروفایل</a>
+            <a href="#">خانه</a>
+            <a href="#">پست‌ها</a>
+            <a href="#">تنظیمات</a>
+        </div>
+        <div class="menu-toggle" id="menu-toggle">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h1>ویرایش اطلاعات پروفایل</h1>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="daneshkade">دانشکده</label>
+                    <input type="text" id="daneshkade" name="daneshkade" placeholder="دانشکده خود را وارد کنید" value="{{ teacher.daneshkade|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label for="reshte">رشته</label>
+                    <input type="text" id="reshte" name="reshte" placeholder="رشته خود را وارد کنید" value="{{ teacher.reshte|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label for="maghta_tahsili">مقطع تحصیلی</label>
+                    <input type="text" id="maghta_tahsili" name="maghta_tahsili" placeholder="مقطع تحصیلی خود را وارد کنید" value="{{ teacher.maghta_tahsili|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label for="password">رمز عبور</label>
+                    <input type="password" id="password" name="password" placeholder="رمز عبور جدید">
+                    <p class="error" id="password-error">رمز عبور باید حداقل 8 کاراکتر باشد</p>
+                </div>
+                <button type="submit" class="btn">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    ذخیره تغییرات
+                </button>
+            </form>
+        </div>
+    </div>
+    <script defer>
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        const form = document.querySelector('form');
+        const passwordInput = document.getElementById('password');
+        const passwordError = document.getElementById('password-error');
+
+        form.addEventListener('submit', (e) => {
+            if (passwordInput.value && passwordInput.value.length < 8) {
+                e.preventDefault();
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

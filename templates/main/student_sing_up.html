@@ -1,0 +1,423 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>فرم ثبت‌نام</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" media="print" onload="this.media='all'">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazir-font@32.0.0/dist/font-face.css">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
+
+    <style>
+        :root {
+            --primary-color: #4b1e3f;
+            --dark-color: #622a51;
+            --button-color: #8c3a67;
+            --button-hover: #a84e7f;
+            --select-bg: #761753;
+            --select-highlight: #f8c3fe;
+            --select-text: #520054;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(45deg, var(--primary-color), #6b2d5c, var(--primary-color));
+            background-size: 200% 200%;
+            animation: gradientFlow 15s ease infinite;
+            color: white;
+            font-family: 'Vazir', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .login-container {
+            max-width: 90vw;
+            width: 400px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: var(--dark-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-control, .form-select {
+            background-color: #f8c3fe;
+            color: var(--select-text);
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            padding: 0.75rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 8px var(--button-hover);
+            background-color: #fff;
+        }
+
+        .btn-primary {
+            background-color: var(--button-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.05);
+        }
+
+        .form-label {
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Custom Select2 Styling */
+        .select2-container--default .select2-selection--single {
+            background: linear-gradient(135deg, #f8c3fe, #e0b3ff);
+            border: none;
+            border-radius: 12px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            padding: 0 3.5rem 0 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .select2-container--default .select2-selection--single:hover {
+            box-shadow: 0 0 10px var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: var(--select-text);
+            line-height: 42px;
+            text-align: right;
+            padding-right: 1.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            width: 25px;
+            height: 42px;
+            left: 10px;
+            right: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: var(--select-text) transparent transparent transparent;
+            border-width: 7px 7px 0 7px;
+            margin-top: -4px;
+            transition: transform 0.3s ease;
+        }
+
+        .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+            transform: rotate(180deg);
+        }
+
+        .select2-container .select2-dropdown {
+            background: linear-gradient(135deg, var(--select-bg), #8a2b6d);
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 100% !important;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .select2-container .select2-results__option {
+            color: #ffffff;
+            padding: 0.6rem 1.2rem;
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            text-align: right;
+            transition: background-color 0.2s ease;
+        }
+
+        .select2-container .select2-results__option:hover {
+            background-color: rgba(248, 195, 254, 0.3);
+        }
+
+        .select2-container .select2-results__option--highlighted {
+            background-color: var(--select-highlight);
+            color: var(--select-text);
+        }
+
+        .select2-container--default .select2-results__option[aria-selected="true"] {
+            background-color: var(--button-hover);
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        a {
+            color: #f8c3fe;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--button-hover);
+        }
+
+        /* Smartwatch and small screen support */
+        @media (max-width: 576px) {
+            .login-container {
+                width: 95vw;
+                margin: 1rem auto;
+                padding: 1rem;
+            }
+
+            .form-control, .form-select, .btn-primary {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 300px) { /* Smartwatch */
+            .login-container {
+                width: 98vw;
+                padding: 0.75rem;
+            }
+
+            .form-control, .form-select, .btn-primary {
+                font-size: 0.8rem;
+                padding: 0.4rem;
+            }
+
+            h3 {
+                font-size: 1rem;
+            }
+
+            .form-label {
+                font-size: 0.75rem;
+            }
+
+            .select2-container--default .select2-selection--single {
+                height: 35px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 35px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="login-container">
+        <h3 class="text-center">دانشجوی گل (ثبت‌نام)</h3>
+
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p class="error-message">{{ error|safe }}</p>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <p class="error-message">{{ error|safe }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="name" class="form-label">نام</label>
+                <input type="text" id="name" name="name" class="form-control" maxlength="17" required>
+                {% if form.name.errors %}
+                    {% for error in form.name.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="number" class="form-label">شماره موبایل</label>
+                <input type="tel" id="number" name="number" class="form-control" maxlength="11" placeholder="09123654987" required>
+                {% if form.number.errors %}
+                    {% for error in form.number.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">ایمیل (برای اطلاع‌رسانی)</label>
+                <input type="email" id="email" name="email" class="form-control" maxlength="50" oninvalid="this.setCustomValidity('فرمت ایمیل اشتباه است! لطفاً یک ایمیل معتبر وارد کنید.')" oninput="this.setCustomValidity('')" required>
+                {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="department" class="form-label">دانشکده</label>
+                <select id="department" name="department" class="form-select">
+                    <option value="">لطفاً یک دانشکده انتخاب کنید 🔽</option>
+                    {% for department in departments %}
+                        <option value="{{ department.id }}">{{ department.name }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.department.errors %}
+                    {% for error in form.department.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="field_of_study" class="form-label">رشته تحصیلی</label>
+                <select id="field_of_study" name="field_of_study" class="form-select">
+                    <option value="">لطفاً یک رشته انتخاب کنید 🔽</option>
+                    {% for field in studyField %}
+                        <option value="{{ field.id }}">{{ field.name }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.field_of_study.errors %}
+                    {% for error in form.field_of_study.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+
+            <div class="mb-3">
+                <label for="education_level" class="form-label">مقطغ تحصیلی</label>
+                <select id="education_level" name="education_level" class="form-select">
+                    <option value="">لطفاً یک رشته انتخاب کنید 🔽</option>
+                    {% for education in education_level %}
+                        <option value="{{ education.id }}">{{ education.name }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.education_level.errors %}
+                    {% for error in form.education_level.errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">رمز عبور</label>
+                <input type="password" id="password" name="password" class="form-control" maxlength="80" required>
+                {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                        {% if "This field is required" in error %}
+                            <div class="error-message">فیلد رمز عبور خالیه</div>
+                        {% else %}
+                            <div class="error-message">{{ error }}</div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">بخش بعدی</button>
+        </form>
+
+        <p class="text-center mt-3">از قبل ثبت‌نام کردی؟ پس (<a href="/student/login/">ورود</a>)</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize particles.js
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 50, density: { enable: true, value_area: 800 } },
+                    color: { value: ['#f8c3fe', '#e0b3ff', '#a84e7f'] },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.5, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1 } },
+                    size: { value: 3, random: true, anim: { enable: true, speed: 2 } },
+                    line_linked: { enable: false },
+                    move: { enable: true, speed: 1, direction: 'none', random: true, straight: false, out_mode: 'out' }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+                    modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } }
+                },
+                retina_detect: true
+            });
+
+            $("#department, #field_of_study").select2({
+                placeholder: "یک گزینه را انتخاب کنید...",
+                allowClear: true,
+                width: '100%',
+                dropdownCssClass: 'custom-select2-dropdown',
+                dir: 'rtl'
+            });
+
+            // Fix Select2 arrow alignment for RTL
+            $('.select2-container').css('text-align', 'right');
+
+            // Optimize form input for low-end devices
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('touchstart', () => input.focus(), { passive: true });
+            });
+
+            $("#department").on("change", function() {
+                console.log("Selected department:", $(this).val());
+            });
+        });
+    </script>
+</body>
+</html>
